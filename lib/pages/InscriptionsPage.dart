@@ -1,18 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:openchat/pages/Selection.dart';
 import 'package:openchat/pages/login.dart';
-import 'package:openchat/pages/survey3.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class Survey2 extends StatefulWidget {
-  const Survey2({super.key});
+class InscriptionsPage extends StatefulWidget {
+  const InscriptionsPage({super.key});
 
   @override
-  State<Survey2> createState() => _Survey2State();
+  State<InscriptionsPage> createState() => _InscriptionsPageState();
 }
 
-class _Survey2State extends State<Survey2> {
+class _InscriptionsPageState extends State<InscriptionsPage> {
   bool isGoogleSignIn = true;
   final key = GlobalKey<FormState>();
   final _nameController = TextEditingController();
@@ -82,7 +80,12 @@ class _Survey2State extends State<Survey2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isGoogleSignIn ? IndexInscriptions() : Inscriptions(),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: isGoogleSignIn ? IndexInscriptions() : Inscriptions(),
+        ),
+      ),
     );
   }
 
@@ -90,309 +93,240 @@ class _Survey2State extends State<Survey2> {
   Widget IndexInscriptions() {
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
-    return Stack(
-      children: [
-        Positioned(
-          top: h * 0.1,
-          left: 0.25 * w,
-          child: Text(
+    return Container(
+      height: h * 0.9, // Ensure it takes up most of the screen height
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Spacer(flex: 2),
+          const Text(
             "Inscriptions",
             style: TextStyle(
-              fontFamily: 'Cursive',
               fontSize: 45,
               fontWeight: FontWeight.bold,
+              color: Color(0xFF1B847F),
             ),
           ),
-        ),
-        Positioned(
-          top: h * 0.5,
-          left: 0.25 * w,
-          child: Column(
-            spacing: 15,
-            children: [
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black87,
-                  minimumSize: Size(250, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                icon: Image.network(
-                  'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png',
-                  height: 24,
-                ),
-                label: Text("S'inscrire avec Google"),
-                onPressed: () {
-                  googleSignIn();
-                },
+          const SizedBox(height: 10),
+          Text(
+            "Rejoignez la communauté OpenChat",
+            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+            textAlign: TextAlign.center,
+          ),
+          const Spacer(flex: 1),
+          ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black87,
+              minimumSize: const Size(double.infinity, 56),
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: BorderSide(color: Colors.grey.shade300),
               ),
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xAF1B847F),
-                  foregroundColor: Colors.black87,
-                  minimumSize: Size(250, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                icon: Icon(
-                  Icons.people_alt_outlined,
-                  color: Colors.white,
-                  size: 24,
-                ),
-                label: Text(
-                  "S'inscrire avec son email",
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: () {
-                  setState(() {
-                    isGoogleSignIn = false;
-                  });
-                },
+            ),
+            icon: Image.network(
+              'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png',
+              height: 24,
+            ),
+            label: const Text("Continuer avec Google", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            onPressed: () {
+              googleSignIn();
+            },
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF1B847F),
+              foregroundColor: Colors.white,
+              minimumSize: const Size(double.infinity, 56),
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
-            ],
-          ),
-        ),
-        SizedBox(width: w, height: h),
-        Positioned(
-          top: h * 0.1,
-          right: -50,
-          child: Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              color: Color(0xAF1B847F),
-              borderRadius: BorderRadius.circular(100),
             ),
+            icon: const Icon(Icons.email_outlined, size: 24),
+            label: const Text("S'inscrire avec un email", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            onPressed: () {
+              setState(() {
+                isGoogleSignIn = false;
+              });
+            },
           ),
-        ),
-        Positioned(
-          top: h * 0.85,
-          left: -50,
-          child: Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              color: Color(0xAF1B847F),
-              borderRadius: BorderRadius.circular(100),
-            ),
-          ),
-        ),
-      ],
+          const Spacer(flex: 3),
+        ],
+      ),
     );
   }
 
-  //Email Inscriptions
+  // Email Inscriptions
   Widget Inscriptions() {
-    final w = MediaQuery.of(context).size.width;
-    final h = MediaQuery.of(context).size.height;
-    return Stack(
-      children: [
-        Positioned(
-          top: h * 0.2,
-          left: w * 0.1,
-          width: w * 0.8,
-          child: Form(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Header Row with Back Button
+          Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    isGoogleSignIn = true;
+                  });
+                },
+                icon: const Icon(Icons.arrow_back_ios_new, color: Color(0xFF1B847F)),
+              ),
+              const SizedBox(width: 10),
+              const Text(
+                "Créer un compte",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1B847F),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 30),
+
+          Form(
             key: key,
             child: Column(
-              spacing: 40,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 20, // Utilizing spacing from recent Flutter versions or wrap in SizedBox
               children: [
-                TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Entrer un nom valide";
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white.withOpacity(0.9),
-                    prefixIcon: Icon(Icons.person, color: Color(0xFF1B847F)),
-                    labelText: "Nom",
-                    labelStyle: TextStyle(color: Color(0xFF1B847F)),
-                  ),
+                _buildTextField(
                   controller: _nameController,
+                  label: "Nom complet",
+                  icon: Icons.person_outline,
+                  validator: (value) => (value == null || value.isEmpty) ? "Entrer un nom valide" : null,
                 ),
-                TextFormField(
-                  validator: (value) {
-                    if (value == "" || value!.isEmpty || !value.contains("@")) {
-                      return "Entrer une email Valide";
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white.withOpacity(0.9),
-                    prefixIcon: Icon(Icons.email, color: Color(0xFF1B847F)),
-                    labelText: "Email",
-                    labelStyle: TextStyle(color: Color(0xFF1B847F)),
-                  ),
+                _buildTextField(
                   controller: _emailController,
+                  label: "Email",
+                  icon: Icons.email_outlined,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) => (value == "" || value!.isEmpty || !value.contains("@")) ? "Entrer un email valide" : null,
                 ),
-                TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Veuillez entrer un mot de passe';
-                    }
-                    if (value.length < 6) {
-                      return 'Le mot de passe doit contenir au moins 6 caractères';
-                    }
-                    return null;
-                  },
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    fillColor: Colors.white.withOpacity(0.9),
-                    prefixIcon: Icon(Icons.lock, color: Color(0xFF1B847F)),
-                    labelText: "Mot de Passe",
-                    labelStyle: TextStyle(color: Color(0xFF1B847F)),
-                  ),
+                _buildTextField(
                   controller: _passwordVController,
-                ),
-                TextFormField(
+                  label: "Mot de passe",
+                  icon: Icons.lock_outline,
+                  obscureText: true,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Entrer un nom Mot de passe de comfirmation";
-                    }
-                    if (_passwordController.text != _passwordVController.text) {
-                      return "Les mot de passe doivent être identique";
-                    }
+                    if (value == null || value.isEmpty) return 'Veuillez entrer un mot de passe';
+                    if (value.length < 6) return 'Min 6 caractères';
                     return null;
                   },
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    fillColor: Colors.white.withOpacity(0.9),
-                    prefixIcon: Icon(
-                      Icons.lock_outline,
-                      color: Color(0xFF1B847F),
-                    ),
-                    labelText: "Confirmation",
-                    labelStyle: TextStyle(color: Color(0xFF1B847F)),
-                  ),
+                ),
+                _buildTextField(
                   controller: _passwordController,
+                  label: "Confirmer le mot de passe",
+                  icon: Icons.lock_outline,
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) return "Confirmez le mot de passe";
+                    if (_passwordController.text != _passwordVController.text) return "Les mots de passe ne correspondent pas";
+                    return null;
+                  },
                 ),
                 TextFormField(
                   controller: _interetController,
-                  validator: (value) {
-                    if (value == "" || value!.isEmpty) {
-                      return "Entrer un avis valide";
-                    }
-                    return null;
-                  },
-                  minLines: 4,
+                  minLines: 3,
                   maxLines: 5,
+                  validator: (value) => (value == "" || value!.isEmpty) ? "Ce champ est requis" : null,
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Colors.white.withOpacity(0.9),
-                    labelText: "Décrivez vos Motivations",
+                    fillColor: Colors.grey[50],
+                    labelText: "Vos motivations",
+                    alignLabelWithHint: true,
+                    prefixIcon: const Icon(Icons.edit_note, color: Color(0xFF1B847F)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
                     ),
-                    labelStyle: TextStyle(color: Color(0xFF1B847F)),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.grey.shade200),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFF1B847F), width: 2),
+                    ),
+                    labelStyle: TextStyle(color: Colors.grey[700]),
                   ),
                 ),
-                SizedBox(height: 60), // Space for the submit button
               ],
             ),
           ),
-        ),
-        Positioned(
-          left: 10,
-          top: 80,
-          child: ElevatedButton(
+          const SizedBox(height: 40),
+          ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFF1B847F),
-              shape: CircleBorder(),
-              padding: EdgeInsets.all(20),
-              elevation: 5,
-            ),
-            onPressed: () {
-              setState(() {
-                isGoogleSignIn = true;
-              });
-            },
-            child: Icon(Icons.arrow_back_ios, color: Colors.white, size: 30),
-          ),
-        ),
-        Positioned(
-          bottom: 40,
-          right: 40,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFF1B847F),
-              shape: CircleBorder(),
-              padding: EdgeInsets.all(20),
-              elevation: 5,
+              backgroundColor: const Color(0xFF1B847F),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              elevation: 2,
             ),
             onPressed: () {
               if (key.currentState!.validate()) {
                 SignIn();
               }
             },
-            child: Icon(Icons.arrow_forward, color: Colors.white, size: 30),
-          ),
-        ),
-        Positioned(
-          top: h * 0.1,
-          left: 0.25 * w,
-          child: Text(
-            "E-mail Inscriptions",
-            style: TextStyle(fontFamily: 'Cursive', fontSize: 30),
-          ),
-        ),
-        Positioned(
-          top: 40,
-          left: w * 0.22,
-          child: Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              border: Border.all(width: 2, color: Color(0xFF1B847F)),
-              borderRadius: BorderRadius.circular(100),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Finaliser l'inscription",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(width: 8),
+                Icon(Icons.arrow_forward_rounded),
+              ],
             ),
           ),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    required String? Function(String?) validator,
+    bool obscureText = false,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return TextFormField(
+      controller: controller,
+      validator: validator,
+      obscureText: obscureText,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.grey[50],
+        labelText: label,
+        prefixIcon: Icon(icon, color: const Color(0xFF1B847F)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
         ),
-        Positioned(
-          top: h * 0.1,
-          right: -50,
-          child: Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              color: Color(0xAF1B847F),
-              borderRadius: BorderRadius.circular(100),
-            ),
-          ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey.shade200),
         ),
-        Positioned(
-          top: h * 0.85,
-          left: -50,
-          child: Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              color: Color(0xAF1B847F),
-              borderRadius: BorderRadius.circular(100),
-            ),
-          ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFF1B847F), width: 2),
         ),
-      ],
+        labelStyle: TextStyle(color: Colors.grey[700]),
+      ),
     );
   }
 }

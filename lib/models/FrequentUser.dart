@@ -11,7 +11,7 @@ class FrequentUser extends HiveObject {
   String lastMessage;
 
   @HiveField(2)
-  DateTime updatedAt;
+  String updatedAt;
 
   @HiveField(3)
   Map<String, dynamic> sender;
